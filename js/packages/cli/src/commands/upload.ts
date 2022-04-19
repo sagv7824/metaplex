@@ -29,6 +29,7 @@ import { nftStorageUpload } from '../helpers/upload/nft-storage';
 import { pinataUpload } from '../helpers/upload/pinata';
 import { setCollection } from './set-collection';
 
+
 export async function uploadV2({
   files,
   cacheName,
@@ -176,6 +177,12 @@ export async function uploadV2({
       cacheContent.program.uuid = res.uuid;
       cacheContent.program.candyMachine = res.candyMachine.toBase58();
       candyMachine = res.candyMachine;
+
+      const result = new Promise(resolve => {
+        fs.writeFile('result.json',JSON.stringify({"mintKey": res.candyMachine.toBase58()}),() => {resolve("");});
+      });
+      
+      await result;
 
       if (setCollectionMint) {
         const collection = await setCollection(

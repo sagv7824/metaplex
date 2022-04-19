@@ -5,6 +5,7 @@ import { Readable } from 'form-data';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
 import { getType } from 'mime';
+import * as fs from 'fs';
 
 async function uploadFile(
   s3Client: S3Client,
@@ -28,7 +29,9 @@ async function uploadFile(
     log.info('Error', err);
   }
 
-  const url = `https://${awsS3Bucket}.s3.amazonaws.com/${filename}`;
+  const data = JSON.parse(fs.readFileSync('./config.json','utf-8'));
+  const url = `https://${awsS3Bucket}.s3.amazonaws.com/${data.assetsID}/${filename}`;
+  console.log(url);
   log.debug('Location:', url);
   return url;
 }
